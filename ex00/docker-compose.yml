@@ -1,0 +1,17 @@
+version: "0.1"
+
+services:
+  pds-db:
+    image: postgres
+    container_name: piscine_datascience_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=piscineds
+      - POSTGRES_USER=jfrancis
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - pds-db:/var/lib/postgresql/data
+
+volumes:
+  pds-db:
