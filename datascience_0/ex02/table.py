@@ -33,3 +33,14 @@ if __name__ == "__main__" :
     conn_details.commit()
     cursor.close()
     conn_details.close()
+
+def palindromeIndex(s):
+    if s == s[::-1]:
+        return -1
+    result_s = ""
+    for i in range(len(s)):
+        for j in range(len(s)):
+            if s[i] != s[j]:
+                result_s += s[j]
+            if result_s == result_s[::-1]:
+                return j
