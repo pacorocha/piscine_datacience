@@ -1,14 +1,31 @@
+import os
 import psycopg2
+import time
+from dotenv import load_dotenv
 
 if __name__ == "__main__" :
 
-    conn_details = psycopg2.connect(
-        host="localhost",
-        database="piscineds",
-        user="jfrancis",
-        password="mysecretpassword",
-        port= '5432'
-    )
+    load_dotenv()
+    max_retries = 10
+    retry_delay = 2
+
+    for attempt in range(max_retries):
+        try:
+            conn_details = psycopg2.connect(
+                host="localhost",
+                database=os.getenv("POSTGRES_DB"),
+                user=os.getenv("POSTGRES_USER"),
+                password=os.getenv("POSTGRES_PASSWORD"),
+                port= '5432'
+            )
+            break
+        except psycopg2.OperationalError:
+            if attempt < max_retries - 1:
+                print(f"Connection attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                print("Failed to connect to database after all retries")
+                raise
 
     if conn_details:
         print("Connected to base")
