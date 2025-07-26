@@ -13,6 +13,15 @@ if __name__ == "__main__" :
     if conn_details:
         print("Connected to base")
     cursor = conn_details.cursor()
+
+    create_enum_type = '''
+        DO $$ BEGIN
+            CREATE TYPE event_type AS ENUM ('view', 'cart', 'purchase', 'remove_from_cart');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    '''
+
     table_creation = '''
         CREATE TABLE IF NOT EXISTS public.data_2022_oct
         (
@@ -29,6 +38,7 @@ if __name__ == "__main__" :
         ALTER TABLE IF EXISTS public.data_2022_oct
             OWNER to jfrancis;
         '''
+    cursor.execute(create_enum_type)
     cursor.execute(table_creation)
     conn_details.commit()
     cursor.close()
